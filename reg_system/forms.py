@@ -1,3 +1,5 @@
+import re
+
 from django.forms import ModelForm
 from django import forms
 from .models import Physician
@@ -5,6 +7,7 @@ from .models import Physician
 
 class PhysicianSignupForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
+    re_password = forms.CharField(widget=forms.PasswordInput)
     email_id = forms.EmailField(required=True)
 
     class Meta:
@@ -12,7 +15,7 @@ class PhysicianSignupForm(ModelForm):
         model = Physician
 
         # Custom fields
-        fields = ["email_id", "password", "first_name", "last_name"]
+        fields = ["first_name", "last_name", "email_id", "password", "re_password"]
 
         # this function will be used for the validation
 
@@ -25,14 +28,38 @@ class PhysicianSignupForm(ModelForm):
         password = self.cleaned_data.get('password')
         first_name = self.cleaned_data.get('first_name')
         last_name = self.cleaned_data.get('last_name')
+        re_password = self.cleaned_data.get("re_password")
 
         # conditions to be met for the password length
 
+        if not re.findall('^[a-z][a-z\s]*$', first_name):
+            self._errors['first_name'] = self.error_class([
+                "First name should only contain letters and spaces."])
+
+        if not re.findall('^[a-z][a-z\s]*$', last_name):
+            self._errors['last_name'] = self.error_class([
+                "Last name should only contain letters and spaces."])
+
         if len(password) < 3:
             self._errors['password'] = self.error_class([
-                'Post Should Contain minimum 3 characters'])
+                'Password Should Contain minimum 3 characters'])
 
-            # return any errors if found
+        if not re.findall('\d', password):
+            self._errors['password'] = self.error_class([
+                "The password must contain at least 1 digit, 0-9."])
+
+        if not re.findall('[A-Z]', password):
+            self._errors['password'] = self.error_class([
+                "The password must contain at least one Uppercase Character."])
+
+        if not re.findall('[()[\]{}|\\`~!@#$%^&*_\-+=;:\'",<>./?]', password):
+            self._errors['password'] = self.error_class([
+                "The password must contain at least 1 special character."])
+
+        if not password == re_password:
+            self._errors['re_password'] = self.error_class([
+                "The password does not match "])
+
         return self.cleaned_data
 
 
