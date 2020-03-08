@@ -2,7 +2,7 @@ import re
 
 from django.forms import ModelForm
 from django import forms
-from .models import Physician
+from .models import Physician, Patient
 
 
 class PhysicianSignupForm(ModelForm):
@@ -32,17 +32,17 @@ class PhysicianSignupForm(ModelForm):
 
         # conditions to be met for the password length
 
-        if not re.findall('^[a-z][a-z\s]*$', first_name):
+        if not re.findall('[a-zA-Z][a-zA-Z ]*[a-zA-Z]$', first_name):
             self._errors['first_name'] = self.error_class([
                 "First name should only contain letters and spaces."])
 
-        if not re.findall('^[a-z][a-z\s]*$', last_name):
+        if not re.findall('[a-zA-Z][a-zA-Z ]*[a-zA-Z]$', last_name):
             self._errors['last_name'] = self.error_class([
                 "Last name should only contain letters and spaces."])
 
-        if len(password) < 3:
+        if len(password) < 6:
             self._errors['password'] = self.error_class([
-                'Password Should Contain minimum 3 characters'])
+                'Password Should Contain minimum 6 characters'])
 
         if not re.findall('\d', password):
             self._errors['password'] = self.error_class([
@@ -80,5 +80,37 @@ class PhysicianLoginForm(forms.Form):
         # extract the username and text field from the data
         email_id = self.cleaned_data.get('email_id')
         password = self.cleaned_data.get('password')
+
+        return self.cleaned_data
+
+
+class PatientSignupForm(ModelForm):
+    email_id = forms.EmailField(required=True)
+
+    class Meta:
+        # write the name of models for which the form is made
+        model = Patient
+
+        # Custom fields
+        fields = ["first_name", "last_name", "email_id"]
+
+        # this function will be used for the validation
+
+    def clean(self):
+        # data from the form is fetched using super function
+        super(PatientSignupForm, self).clean()
+
+        # extract the username and text field from the data
+        email_id = self.cleaned_data.get('email_id')
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+
+        if not re.findall('[a-zA-Z][a-zA-Z ]*[a-zA-Z]$', first_name):
+            self._errors['first_name'] = self.error_class([
+                "First name should only contain letters and spaces."])
+
+        if not re.findall('[a-zA-Z][a-zA-Z ]*[a-zA-Z]$', last_name):
+            self._errors['last_name'] = self.error_class([
+                "Last name should only contain letters and spaces."])
 
         return self.cleaned_data

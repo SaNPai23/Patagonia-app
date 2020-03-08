@@ -3,18 +3,10 @@
 
 {% load crispy_forms_tags %}
 
-
+<br>
 <div style="text-align:center"><h2>Login</h2></div>
-{#  <form method="post" id="form_login">#}
-{#    {% csrf_token %}#}
-{#    {{ form.as_table }}#}
-{#      <label>Email</label>#}
-{#      <input type="email" name="username" required>#}
-{#      <label>Password</label><label>#}
-{#      <input type="password" name="password" required>#}
-{#  </label>#}
-{#      <button type="submit">Login</button>#}
-    <div align="center">
+
+<div>
   <form method="post">
     {% csrf_token %}
     {{ form|crispy }}
@@ -24,5 +16,6 @@
 
 
     </div>
-    <a href= "/signup">New User? Signup</a>
+    <br>
+    New User? <a href= "/signup">Signup</a>
 {% endblock %}

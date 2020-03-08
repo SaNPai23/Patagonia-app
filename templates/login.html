@@ -1,3 +1,48 @@
-<h3>Physician Login</h3><a href= "/logout">Logout</a>
+{% extends 'base.html' %}
+{% block content %}
 
-{{ query}}
+<br><br>
+<h3>Patient List for {{ physician.first_name}} {{ physician.last_name }}</h3>
+    <br>
+
+     {% if patients %}
+         <table class="table">
+         <tr>
+             <th>
+                 Name
+             </th>
+             <th colspan="2" class="text-center">
+                 Action
+             </th>
+         </tr>
+        {% for patient in patients %}
+            <tr>
+
+            <td>
+                <h5 class = "text-bottom">{{ patient.first_name}} {{ patient.last_name }}</h5>
+            </td>
+            <td>
+                    &nbsp;
+{#                <a class="btn-link" href="/edit/?id={{ patient.id }}">Edit Patient</a>#}
+                <a href="/edit/?id={{ patient.id }}" class="btn btn-primary" role="button" >Edit Patient</a>
+            </td>
+            <td>
+{#                <a class="btn-link" href="/delete/?id={{ patient.id }}">Delete Patient</a>#}
+                <a href="/delete/?id={{ patient.id }}" class="btn btn-danger" role="button" >Delete Patient</a>
+            </td>
+            </tr>
+
+        {% endfor %}
+
+
+          </table>
+
+     {% else %}
+        No patients registered for {{ physician.first_name}} {{ physician.last_name }}
+    {% endif %}
+<br>
+<a class="btn-link" href="/addpatient">Add new Patient</a>
+
+
+
+{% endblock %}
