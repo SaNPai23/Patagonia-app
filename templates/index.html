@@ -1,3 +1,36 @@
 <h3>Welcome to Patagonia Health!</h3>
-<a href="login/">Login</a>
-<a href="signup/">Signup</a>
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% block content %}
+<div style="text-align:center"><h2>Login</h2></div>
+{#  <form method="post" id="form_login">#}
+{#    {% csrf_token %}#}
+{#    {{ form.as_table }}#}
+{#      <label>Email</label>#}
+{#      <input type="email" name="username" required>#}
+{#      <label>Password</label><label>#}
+{#      <input type="password" name="password" required>#}
+{#  </label>#}
+{#      <button type="submit">Login</button>#}
+    <div align="center">
+  <form action="" method="post"><input type='hidden'/>
+         {%csrf_token %}
+
+            {{ form.as_p }}
+          <div class="form-group">
+            <button type="submit" class="button">
+              Login
+            </button>
+
+          </div>
+  </form>
+    </div><a href= "/signup">Signup</a>
+{% endblock %}
