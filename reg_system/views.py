@@ -104,7 +104,7 @@ def signup(request):
 def edit(request):
     if not request.session.has_key('username'):
         messages.add_message(request, messages.ERROR, 'You have to log in first.')
-        return redirect('login')
+        return redirect('index')
     else:
         if request.method == 'GET':
             patient_id = request.GET.get('id')
