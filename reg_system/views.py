@@ -110,13 +110,13 @@ def edit(request):
             patient_id = request.GET.get('id')
             patient = Patient.objects.get(pk=patient_id)
             form = PatientSignupForm(instance=patient)
-            return render(request, 'edit.html', {'form': form, 'logout': True})
+            return render(request, 'edit.html', {'form': form, 'logout': True, 'patient_id': patient_id})
 
         elif request.method == 'POST':
 
             # Pass the form data to the form class
-            patientemail = request.POST.get('email_id')
-            patient = Patient.objects.get(email_id=patientemail)
+            patientid = request.POST.get('patient_id')
+            patient = Patient.objects.get(id=patientid)
             details = PatientSignupForm(request.POST, instance=patient)
 
             # In the 'form' class the clean function
