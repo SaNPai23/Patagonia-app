@@ -1,5 +1,5 @@
 import re
-
+from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 from django import forms
 from .models import Physician, Patient
@@ -7,7 +7,7 @@ from .models import Physician, Patient
 
 class PhysicianSignupForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-    re_password = forms.CharField(widget=forms.PasswordInput)
+    verify_password = forms.CharField(widget=forms.PasswordInput)
     email_id = forms.EmailField(required=True)
 
     class Meta:
@@ -15,7 +15,7 @@ class PhysicianSignupForm(ModelForm):
         model = Physician
 
         # Custom fields
-        fields = ["first_name", "last_name", "email_id", "password", "re_password"]
+        fields = ["first_name", "last_name", "email_id", "password", "verify_password"]
 
         # this function will be used for the validation
 
@@ -28,7 +28,7 @@ class PhysicianSignupForm(ModelForm):
         password = self.cleaned_data.get('password')
         first_name = self.cleaned_data.get('first_name')
         last_name = self.cleaned_data.get('last_name')
-        re_password = self.cleaned_data.get("re_password")
+        verify_password = self.cleaned_data.get("verify_password")
 
         # conditions to be met for the password length
 
@@ -56,8 +56,8 @@ class PhysicianSignupForm(ModelForm):
             self._errors['password'] = self.error_class([
                 "The password must contain at least 1 special character."])
 
-        if not password == re_password:
-            self._errors['re_password'] = self.error_class([
+        if not password == verify_password:
+            self._errors['verify_password'] = self.error_class([
                 "The password does not match "])
 
         return self.cleaned_data

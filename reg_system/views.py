@@ -109,6 +109,10 @@ def edit(request):
         if request.method == 'GET':
             patient_id = request.GET.get('id')
             patient = Patient.objects.get(pk=patient_id)
+            curr_physician = Physician.objects.get(email_id=request.session['username'])
+            if patient.physician_id_id != curr_physician.id:
+                messages.add_message(request, messages.ERROR, 'You are not authorised to edit this patient')
+                return redirect('login')
             form = PatientSignupForm(instance=patient)
             return render(request, 'edit.html', {'form': form, 'logout': True, 'patient_id': patient_id})
 
@@ -149,6 +153,10 @@ def delete(request):
     else:
         patient_id = request.GET.get('id')
         instance = Patient.objects.get(id=patient_id)
+        curr_physician = Physician.objects.get(email_id=request.session['username'])
+        if instance.physician_id_id != curr_physician.id:
+            messages.add_message(request, messages.ERROR, 'You are not authorised to delete this patient')
+            return redirect('login')
         instance.delete()
         return redirect('login')
 
